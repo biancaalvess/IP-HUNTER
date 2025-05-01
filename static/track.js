@@ -184,50 +184,58 @@
     return deviceData
   }
 
+
   // Detectar fontes instaladas
-  function detectFonts(fontList) {
-    const baseFonts = ["monospace", "sans-serif", "serif"]
-    const testString = "mmmmmmmmmmlli"
-    const testSize = "72px"
-    const h = document.getElementsByTagName("body")[0]
+function detectFonts(fontList) {
+  const baseFonts = ["monospace", "sans-serif", "serif"];
+  const testString = "mmmmmmmmmmlli";
+  const testSize = "72px";
+  const h = document.getElementsByTagName("body")[0];
 
-    // Criar elemento de teste
-    const s = document.createElement("span")
-    s.style.fontSize = testSize
-    s.innerHTML = testString
-    const defaultWidth = {}
-    const defaultHeight = {}
+  // Criar elemento de teste
+  const s = document.createElement("span");
+  s.style.fontSize = testSize;
+  s.innerHTML = testString;
+  const defaultWidth = {};
+  const defaultHeight = {};
 
-    // Obter larguras padrão
-    for (const index in baseFonts) {
-      s.style.fontFamily = baseFonts[index]
-      h.appendChild(s)
-      defaultWidth[baseFonts[index]] = s.offsetWidth
-      defaultHeight[baseFonts[index]] = s.offsetHeight
-      h.removeChild(s)
-    }
-
-    // Testar cada fonte
-    const detected = []
-    for (const font of fontList) {
-      let detected = false
-      for (const baseFont of baseFonts) {
-        s.style.fontFamily = font + "," + baseFont
-        h.appendChild(s)
-        const matched = s.offsetWidth !== defaultWidth[baseFont] || s.offsetHeight !== defaultHeight[baseFont]
-        h.removeChild(s)
-        if (matched) {
-          detected = true
-          break
-        }
-      }
-      if (detected) {
-        detected.push(font)
-      }
-    }
-
-    return detected
+  // Obter larguras padrão
+  for (const index in baseFonts) {
+    s.style.fontFamily = baseFonts[index];
+    h.appendChild(s);
+    defaultWidth[baseFonts[index]] = s.offsetWidth;
+    defaultHeight[baseFonts[index]] = s.offsetHeight;
+    h.removeChild(s);
   }
+
+  // Inicializar a variável detected corretamente como um array
+  const detected = [];
+  
+  // Testar cada fonte
+  for (const font of fontList) {
+    let fontDetected = false;  // Usar uma variável separada para verificar se a fonte foi detectada
+    
+    for (const baseFont of baseFonts) {
+      s.style.fontFamily = font + "," + baseFont;
+      h.appendChild(s);
+      const matched = s.offsetWidth !== defaultWidth[baseFont] || s.offsetHeight !== defaultHeight[baseFont];
+      h.removeChild(s);
+
+      if (matched) {
+        fontDetected = true;
+        break;
+      }
+    }
+
+    // Se a fonte for detectada, adicionar ao array detected
+    if (fontDetected) {
+      detected.push(font);
+    }
+  }
+
+  return detected;  // Retornar a lista de fontes detectadas
+}
+
 
   // Função para enviar dados para o servidor
   function sendDataToServer(data) {
