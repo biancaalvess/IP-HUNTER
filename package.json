@@ -1,0 +1,16 @@
+{
+  "name": "ip-hunter",
+  "version": "1.0.0",
+  "description": "IP Hunter is a Flask-based web application designed for educational purposes to demonstrate how visitor information can be collected and analyzed through a web browser.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
