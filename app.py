@@ -14,8 +14,8 @@ STATIC_DIR = "static"
 os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(STATIC_DIR, exist_ok=True)
 
+# Função para coletar informações detalhadas do visitante
 def get_visitor_data():
-    """Coleta informações básicas do visitante"""
     return {
         "id": str(uuid.uuid4()),
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -34,14 +34,17 @@ def get_visitor_data():
             "referrer": request.headers.get('Referer', ''),
             "origin": request.headers.get('Origin', ''),
         },
-        "device": {},
+        "device": {
+            "screen_info": request.args.get('screen', ''),
+            "platform": request.args.get('platform', ''),
+            "timezone": request.args.get('timezone', ''),
+        },
         "server": {
             "hostname": socket.gethostname(),
             "platform": platform.platform(),
             "python_version": platform.python_version(),
         }
     }
-
 
 # Salvar dados em arquivo .json
 def save_visitor_data(data):
