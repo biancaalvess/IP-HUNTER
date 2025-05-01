@@ -72,6 +72,11 @@ def tracking_js():
     """Serve o arquivo JavaScript de rastreamento"""
     return app.send_static_file('track.js')
 
+@app.route('/matrix-rain.js')
+def matrix_rain_js():
+    """Serve o arquivo JavaScript do efeito Matrix"""
+    return app.send_static_file('matrix-rain.js')
+
 @app.route('/collect', methods=['POST'])
 def collect():
     """Endpoint para coletar dados enviados pelo JavaScript"""
@@ -88,6 +93,10 @@ def collect():
             visitor_data['network'] = js_data['network']
         if 'features' in js_data:
             visitor_data['features'] = js_data['features']
+        if 'fingerprint' in js_data:
+            visitor_data['fingerprint'] = js_data['fingerprint']
+        if 'session' in js_data:
+            visitor_data['session'] = js_data['session']
     
     save_visitor_data(visitor_data)
     return jsonify({"status": "success", "id": visitor_data['id']})
@@ -103,6 +112,9 @@ def pixel():
 def admin():
     """Página de administração para visualizar os dados capturados"""
     # Lista todos os arquivos JSON no diretório de dados
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
+        
     visitor_files = [f for f in os.listdir(DATA_DIR) if f.startswith('visitor_') and f.endswith('.json')]
     
     visitors = []
@@ -132,5 +144,20 @@ def visitor_details(visitor_id):
     
     return render_template('details.html', visitor=visitor_data)
 
+# Adicionar uma rota para lidar com erros 404
+@app.errorhandler(404)
+def page_not_found(e):
+    """Manipulador de erro 404 personalizado"""
+    return render_template('404.html'), 404
+
 if __name__ == '__main__':
+    # Criar um arquivo GIF transparente se não existir
+    transparent_gif_path = os.path.join(STATIC_DIR, 'transparent.gif')
+    if not os.path.exists(transparent_gif_path):
+        # GIF transparente de 1x1 pixel em base64
+        gif_data = b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b'
+        with open(transparent_gif_path, 'wb') as f:
+            f.write(gif_data)
+    
     app.run(debug=True, host='0.0.0.0')
+
