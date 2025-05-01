@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Hunter - Detalhes do Visitante</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">IP Hunter - Detalhes do Visitante</div>
+            </div>
+            <div class="terminal-body">
+                <div class="breadcrumb">
+                    <a href="{{ url_for('admin') }}">← Voltar para o Painel</a>
+                </div>
+                
+                <h1>Detalhes do Visitante</h1>
+                <p class="visitor-id">ID: {{ visitor.id }}</p>
+                <p class="visitor-timestamp">Capturado em: {{ visitor.timestamp }}</p>
+                
+                <div class="detail-section">
+                    <h2>Informações de IP</h2>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Endereço IP:</div>
+                            <div class="detail-value">{{ visitor.ip.address }}</div>
+                        </div>
+                        {% if visitor.ip.forwarded_for %}
+                        <div class="detail-item">
+                            <div class="detail-label">X-Forwarded-For:</div>
+                            <div class="detail-value">{{ visitor.ip.forwarded_for }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h2>Navegador</h2>
+                    <div class="detail-grid">
+                        <div class="detail-item full-width">
+                            <div class="detail-label">User Agent:</div>
+                            <div class="detail-value">{{ visitor.browser.user_agent }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Idioma:</div>
+                            <div class="detail-value">{{ visitor.browser.accept_language }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Codificação:</div>
+                            <div class="detail-value">{{ visitor.browser.accept_encoding }}</div>
+                        </div>
+                        {% if visitor.browser.cookies_enabled is defined %}
+                        <div class="detail-item">
+                            <div class="detail-label">Cookies:</div>
+                            <div class="detail-value">{{ "Habilitado" if visitor.browser.cookies_enabled else "Desabilitado" }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h2>Dispositivo</h2>
+                    <div class="detail-grid">
+                        {% if visitor.device.platform %}
+                        <div class="detail-item">
+                            <div class="detail-label">Plataforma:</div>
+                            <div class="detail-value">{{ visitor.device.platform }}</div>
+                        </div>
+                        {% endif %}
+                        {% if visitor.device.screen_info %}
+                        <div class="detail-item">
+                            <div class="detail-label">Tela:</div>
+                            <div class="detail-value">{{ visitor.device.screen_info }}</div>
+                        </div>
+                        {% endif %}
+                        {% if visitor.device.timezone %}
+                        <div class="detail-item">
+                            <div class="detail-label">Fuso Horário:</div>
+                            <div class="detail-value">{{ visitor.device.timezone }}</div>
+                        </div>
+                        {% endif %}
+                        {% if visitor.device.memory %}
+                        <div class="detail-item">
+                            <div class="detail-label">Memória:</div>
+                            <div class="detail-value">{{ visitor.device.memory }} GB</div>
+                        </div>
+                        {% endif %}
+                        {% if visitor.device.cores %}
+                        <div class="detail-item">
+                            <div class="detail-label">Núcleos:</div>
+                            <div class="detail-value">{{ visitor.device.cores }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if visitor.network %}
+                <div class="detail-section">
+                    <h2>Rede</h2>
+                    <div class="detail-grid">
+                        {% if visitor.network.connection_type %}
+                        <div class="detail-item">
+                            <div class="detail-label">Tipo de Conexão:</div>
+                            <div class="detail-value">{{ visitor.network.connection_type }}</div>
+                        </div>
+                        {% endif %}
+                        {% if visitor.network.effective_type %}
+                        <div class="detail-item">
+                            <div class="detail-label">Velocidade Efetiva:</div>
+                            <div class="detail-value">{{ visitor.network.effective_type }}</div>
+                        </div>
+                        {% endif %}
+                        {% if visitor.network.downlink %}
+                        <div class="detail-item">
+                            <div class="detail-label">Downlink:</div>
+                            <div class="detail-value">{{ visitor.network.downlink }} Mbps</div>
+                        </div>
+                        {% endif %}
+                        {% if visitor.network.rtt %}
+                        <div class="detail-item">
+                            <div class="detail-label">RTT:</div>
+                            <div class="detail-value">{{ visitor.network.rtt }} ms</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="detail-section">
+                    <h2>Requisição</h2>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Método:</div>
+                            <div class="detail-value">{{ visitor.request.method }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Caminho:</div>
+                            <div class="detail-value">{{ visitor.request.path }}</div>
+                        </div>
+                        {% if visitor.request.referrer %}
+                        <div class="detail-item full-width">
+                            <div class="detail-label">Referrer:</div>
+                            <div class="detail-value">{{ visitor.request.referrer }}</div>
+                        </div>
+                        {% endif %}
+                        {% if visitor.request.origin %}
+                        <div class="detail-item">
+                            <div class="detail-label">Origem:</div>
+                            <div class="detail-value">{{ visitor.request.origin }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if visitor.features %}
+                <div class="detail-section">
+                    <h2>Recursos do Navegador</h2>
+                    <div class="feature-grid">
+                        {% for feature, supported in visitor.features.items() %}
+                        <div class="feature-item {{ 'supported' if supported else 'not-supported' }}">
+                            <span class="feature-icon">{{ "✓" if supported else "✗" }}</span>
+                            <span class="feature-name">{{ feature }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="detail-section">
+                    <h2>Dados Brutos</h2>
+                    <div class="raw-data">
+                        <pre>{{ visitor|tojson(indent=2) }}</pre>
+                    </div>
+                </div>
+                
+                <div class="warning-box">
+                    <p>⚠️ AVISO: Este projeto é para fins educativos. Use de forma ética e responsável.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

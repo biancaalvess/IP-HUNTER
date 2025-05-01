@@ -1,0 +1,29 @@
+{
+  "id": "8db64d54-ed02-446d-87d0-17d76838b690",
+  "timestamp": "2025-04-30 22:03:47",
+  "ip": {
+    "address": "127.0.0.1",
+    "forwarded_for": ""
+  },
+  "browser": {
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+    "accept_language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+    "accept_encoding": "gzip, deflate, br, zstd"
+  },
+  "request": {
+    "method": "GET",
+    "path": "/pixel.gif",
+    "referrer": "http://127.0.0.1:5000/",
+    "origin": ""
+  },
+  "device": {
+    "screen_info": "",
+    "platform": "",
+    "timezone": ""
+  },
+  "server": {
+    "hostname": "Bianca-PC",
+    "platform": "Windows-11-10.0.26100-SP0",
+    "python_version": "3.13.1"
+  }
+}

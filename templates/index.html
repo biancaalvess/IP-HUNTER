@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Hunter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Script de rastreamento -->
+    <script src="{{ url_for('static', filename='track.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='matrix-rain.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">IP Hunter</div>
+            </div>
+            <div class="terminal-body">
+                <p class="typing-effect">Acesso registrado com sucesso.</p>
+                <p class="blinking-cursor">Seu IP foi capturado para fins educativos.</p>
+                <div class="ascii-art">
+                    <pre>
+  ___ ____     _   _             _            
+ |_ _|  _ \   | | | |_   _ _ __ | |_ ___ _ __ 
+  | || |_) |  | |_| | | | | '_ \| __/ _ \ '__|
+  | ||  __/   |  _  | |_| | | | | ||  __/ |   
+ |___|_|      |_| |_|\__,_|_| |_|\__\___|_|   
+                                              
+⚠️ APENAS PARA FINS EDUCATIVOS ⚠️
+                    </pre>
+                </div>
+                <p class="info-text">Este é um projeto educacional para demonstrar como informações básicas podem ser coletadas através de um navegador web.</p>
+                
+                <!-- Imagem invisível para rastreamento adicional -->
+                <img src="{{ url_for('pixel') }}" alt="" style="position: absolute; width: 1px; height: 1px; opacity: 0;">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

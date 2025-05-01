@@ -1,0 +1,2 @@
+# IP Hunter - Dados de Visitantes
+# Formato: IP: xxx.xxx.xxx.xxx | Navegador: xxx | Data/Hora: yyyy-mm-dd hh:mm:ss

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Hunter - Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">IP Hunter - Painel de Administração</div>
+            </div>
+            <div class="terminal-body">
+                <h1>Dados Capturados</h1>
+                
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <div class="stat-number">{{ visitors|length }}</div>
+                        <div class="stat-label">Visitantes Totais</div>
+                    </div>
+                </div>
+                
+                <div class="data-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>IP</th>
+                                <th>Navegador</th>
+                                <th>Dispositivo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for visitor in visitors %}
+                            <tr>
+                                <td>{{ visitor.timestamp }}</td>
+                                <td>{{ visitor.ip.address }}</td>
+                                <td title="{{ visitor.browser.user_agent }}">
+                                    {{ visitor.browser.user_agent|truncate(30) }}
+                                </td>
+                                <td>
+                                    {% if visitor.device and visitor.device.platform %}
+                                        {{ visitor.device.platform }}
+                                    {% else %}
+                                        Desconhecido
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('visitor_details', visitor_id=visitor.id) }}" class="btn-view">Detalhes</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="warning-box">
+                    <p>⚠️ AVISO: Este projeto é para fins educativos. Use de forma ética e responsável.</p>
+                </div>
+                
+                <div class="link-generator">
+                    <h2>Links para Rastreamento</h2>
+                    <p>Compartilhe um destes links:</p>
+                    <ul>
+                        <li>Página visível: <code id="visible-link"></code></li>
+                        <li>Pixel invisível: <code id="pixel-link"></code></li>
+                        <li>Script de rastreamento: <code id="script-link"></code></li>
+                    </ul>
+                    
+                    <div class="code-snippet">
+                        <h3>Código para inserir em outros sites:</h3>
+                        <pre><code id="embed-code"></code></pre>
+                    </div>
+                </div>
+                
+                <script>
+                    // Gerar os links baseados na URL atual
+                    const baseUrl = window.location.origin;
+                    document.getElementById('visible-link').textContent = baseUrl + '/';
+                    document.getElementById('pixel-link').textContent = baseUrl + '/pixel';
+                    document.getElementById('script-link').textContent = baseUrl + '/track.js';
+                    
+                    // Código para incorporar
+                    const embedCode = `<!-- IP Hunter Tracking Code -->
+<script src="${baseUrl}/track.js"><\/script>
+<img src="${baseUrl}/pixel" style="position: absolute; width: 1px; height: 1px; opacity: 0;">`;
+                    
+                    document.getElementById('embed-code').textContent = embedCode;
+                </script>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
