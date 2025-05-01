@@ -94,13 +94,6 @@ def collect():
     save_visitor_data(visitor_data)
     return jsonify({"status": "success", "id": visitor_data['id']})
 
-# Pixel invisível
-@app.route('/pixel.gif')
-def pixel():
-    data = get_visitor_data()
-    save_visitor_data(data)
-    return redirect(url_for('static', filename='transparent.gif'))
-
 # Painel admin
 @app.route('/admin')
 def admin():
@@ -136,13 +129,6 @@ def visitor_details(visitor_id):
 def page_not_found(e):
     return render_template('404.html'), 404
 
-# Criação do pixel transparente
-if __name__ == '__main__':
-    transparent_gif_path = os.path.join(STATIC_DIR, 'transparent.gif')
-    if not os.path.exists(transparent_gif_path):
-        gif_data = b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b'
-        with open(transparent_gif_path, 'wb') as f:
-            f.write(gif_data)
 
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, host='0.0.0.0', port=port)
