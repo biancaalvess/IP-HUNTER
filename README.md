@@ -2,7 +2,6 @@
 
 IP Hunter is a Flask-based web application designed for educational purposes to demonstrate how visitor information can be collected and analyzed through a web browser.
 
-![IP Hunter](https://v0.placeholder.svg?height=250&width=600&text=IP+Hunter)
 
 ## 📋 Overview
 
@@ -39,7 +38,6 @@ This project showcases various tracking techniques commonly used on the web, inc
 
 O IP Hunter é um aplicativo web baseado em Flask, desenvolvido para fins educacionais, que demonstra como as informações dos visitantes podem ser coletadas e analisadas por meio de um navegador web.
 
-![IP Hunter](https://v0.placeholder.svg?height=250&width=600&text=IP+Hunter)
 
 ## 📋 Visão geral
 
