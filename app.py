@@ -46,16 +46,26 @@ def get_visitor_data():
         }
     }
 
-# Salvar dados em arquivo .json
+# Função para salvar os dados do visitante em arquivos diversos
 def save_visitor_data(data):
+    # Salva os dados em arquivo individual .json
     filename = f"{DATA_DIR}/visitor_{data['id']}.json"
     with open(filename, 'w') as f:
         json.dump(data, f, indent=2)
 
-    # Também adiciona ao log geral
-    log_entry = f"[{data['timestamp']}] IP: {data['ip']['address']} | UA: {data['browser']['user_agent'][:50]}...\n"
+    # Salva os dados no arquivo 'access_log.txt' no formato JSON
     with open(f"{DATA_DIR}/access_log.txt", 'a') as f:
-        f.write(log_entry)
+        json.dump(data, f)
+        f.write("\n")  # Adicionando uma nova linha para cada entrada
+
+    # Salva os dados no arquivo 'visitor_data.txt' em formato legível
+    visitor_data_text = (
+        f"ID: {data['id']}, Timestamp: {data['timestamp']}, "
+        f"IP: {data['ip']['address']}, User-Agent: {data['browser']['user_agent']}, "
+        f"Screen: {data['device']['screen_info']}, Platform: {data['device']['platform']}\n"
+    )
+    with open(f"{DATA_DIR}/visitor_data.txt", 'a') as f:
+        f.write(visitor_data_text)
 
 # Rota principal
 @app.route('/')
