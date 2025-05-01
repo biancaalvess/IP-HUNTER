@@ -101,11 +101,31 @@ def collect():
     save_visitor_data(visitor_data)
     return jsonify({"status": "success", "id": visitor_data['id']})
 
+
+# Função para registrar os dados do visitante (como IP, navegador, etc.)
+def get_visitor_data():
+    return {
+        "ip": request.remote_addr,
+        "user_agent": request.headers.get('User-Agent'),
+        "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+# Função fictícia para salvar os dados do visitante
+def save_visitor_data(visitor_data):
+    # Aqui você pode salvar os dados em um banco de dados ou em um arquivo
+    print(visitor_data)  # Exemplo de saída, substitua pelo código de persistência real
+    pass
+
 @app.route('/pixel.gif')
 def pixel():
     """Retorna um pixel transparente e registra a visita"""
+    # Coleta os dados do visitante
     visitor_data = get_visitor_data()
+    
+    # Salva os dados do visitante (substitua pelo seu método real)
     save_visitor_data(visitor_data)
+    
+    # Redireciona para o arquivo gif transparente (deve estar na pasta 'static')
     return redirect(url_for('static', filename='transparent.gif'))
 
 @app.route('/admin')
