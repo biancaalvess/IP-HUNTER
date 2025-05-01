@@ -94,6 +94,13 @@ def collect():
     save_visitor_data(visitor_data)
     return jsonify({"status": "success", "id": visitor_data['id']})
 
+# Pixel invisível
+@app.route('/pixel.gif')
+def pixel():
+    data = get_visitor_data()
+    save_visitor_data(data)
+    return redirect(url_for('static', filename='transparent.gif'))
+
 # Painel admin
 @app.route('/admin')
 def admin():
