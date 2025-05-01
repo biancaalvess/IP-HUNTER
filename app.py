@@ -101,13 +101,6 @@ def collect():
     save_visitor_data(visitor_data)
     return jsonify({"status": "success", "id": visitor_data['id']})
 
-@app.route('/pixel.gif')
-def pixel():
-    """Retorna um pixel transparente e registra a visita"""
-    visitor_data = get_visitor_data()
-    save_visitor_data(visitor_data)
-    return redirect(url_for('static', filename='transparent.gif'))
-
 @app.route('/admin')
 def admin():
     """Página de administração para visualizar os dados capturados"""
