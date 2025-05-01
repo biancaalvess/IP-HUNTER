@@ -355,7 +355,7 @@ function detectFonts(fontList) {
 
   // Adicionar um pixel de rastreamento invisível
   const img = document.createElement("img")
-  img.src = "/pixel?t=" + new Date().getTime()
+  img.src = "/static/pixel.gif" + new Date().getTime()
   img.style.position = "absolute"
   img.style.width = "1px"
   img.style.height = "1px"
