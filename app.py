@@ -158,6 +158,7 @@ if __name__ == '__main__':
         gif_data = b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b'
         with open(transparent_gif_path, 'wb') as f:
             f.write(gif_data)
-    
+            
+    app.run(host='0.0.0.0', port=port)
     app.run(debug=True, host='0.0.0.0')
 
