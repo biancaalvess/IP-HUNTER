@@ -101,7 +101,7 @@ def collect():
     save_visitor_data(visitor_data)
     return jsonify({"status": "success", "id": visitor_data['id']})
 
-@app.route('/pixel.gif')
+@app.route('/transparent.gif')
 def pixel():
     """Retorna um pixel transparente e registra a visita"""
     visitor_data = get_visitor_data()
