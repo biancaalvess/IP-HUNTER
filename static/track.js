@@ -184,58 +184,56 @@
     return deviceData
   }
 
-
   // Detectar fontes instaladas
-function detectFonts(fontList) {
-  const baseFonts = ["monospace", "sans-serif", "serif"];
-  const testString = "mmmmmmmmmmlli";
-  const testSize = "72px";
-  const h = document.getElementsByTagName("body")[0];
+  function detectFonts(fontList) {
+    const baseFonts = ["monospace", "sans-serif", "serif"];
+    const testString = "mmmmmmmmmmlli";
+    const testSize = "72px";
+    const h = document.getElementsByTagName("body")[0];
 
-  // Criar elemento de teste
-  const s = document.createElement("span");
-  s.style.fontSize = testSize;
-  s.innerHTML = testString;
-  const defaultWidth = {};
-  const defaultHeight = {};
+    // Criar elemento de teste
+    const s = document.createElement("span");
+    s.style.fontSize = testSize;
+    s.innerHTML = testString;
+    const defaultWidth = {};
+    const defaultHeight = {};
 
-  // Obter larguras padrão
-  for (const index in baseFonts) {
-    s.style.fontFamily = baseFonts[index];
-    h.appendChild(s);
-    defaultWidth[baseFonts[index]] = s.offsetWidth;
-    defaultHeight[baseFonts[index]] = s.offsetHeight;
-    h.removeChild(s);
-  }
-
-  // Inicializar a variável detected corretamente como um array
-  const detected = [];
-  
-  // Testar cada fonte
-  for (const font of fontList) {
-    let fontDetected = false;  // Usar uma variável separada para verificar se a fonte foi detectada
-    
-    for (const baseFont of baseFonts) {
-      s.style.fontFamily = font + "," + baseFont;
+    // Obter larguras padrão
+    for (const index in baseFonts) {
+      s.style.fontFamily = baseFonts[index];
       h.appendChild(s);
-      const matched = s.offsetWidth !== defaultWidth[baseFont] || s.offsetHeight !== defaultHeight[baseFont];
+      defaultWidth[baseFonts[index]] = s.offsetWidth;
+      defaultHeight[baseFonts[index]] = s.offsetHeight;
       h.removeChild(s);
+    }
 
-      if (matched) {
-        fontDetected = true;
-        break;
+    // Inicializar a variável detected corretamente como um array
+    const detected = [];
+
+    // Testar cada fonte
+    for (const font of fontList) {
+      let fontDetected = false;  // Usar uma variável separada para verificar se a fonte foi detectada
+
+      for (const baseFont of baseFonts) {
+        s.style.fontFamily = font + "," + baseFont;
+        h.appendChild(s);
+        const matched = s.offsetWidth !== defaultWidth[baseFont] || s.offsetHeight !== defaultHeight[baseFont];
+        h.removeChild(s);
+
+        if (matched) {
+          fontDetected = true;
+          break;
+        }
+      }
+
+      // Se a fonte for detectada, adicionar ao array detected
+      if (fontDetected) {
+        detected.push(font);
       }
     }
 
-    // Se a fonte for detectada, adicionar ao array detected
-    if (fontDetected) {
-      detected.push(font);
-    }
+    return detected;  // Retornar a lista de fontes detectadas
   }
-
-  return detected;  // Retornar a lista de fontes detectadas
-}
-
 
   // Função para enviar dados para o servidor
   function sendDataToServer(data) {
@@ -289,76 +287,47 @@ function detectFonts(fontList) {
           position: {
             scrollX: window.scrollX,
             scrollY: window.scrollY,
-            maxScroll: document.documentElement.scrollHeight - window.innerHeight,
           },
           timestamp: timestamp,
         })
-      }, 500)
-    })
 
-    // Rastrear tempo na página
-    setInterval(() => {
-      const currentTime = new Date().getTime()
-      const timeOnPage = Math.floor((currentTime - session.startTime) / 1000)
-
-      // Atualizar a cada minuto
-      if (timeOnPage % 60 === 0) {
-        session.timeOnPage = timeOnPage
-
-        // Verificar se a sessão expirou
-        if (currentTime - session.lastActivity > config.sessionTimeout) {
-          // Enviar dados finais da sessão
+        // Enviar dados a cada 5 interações
+        if (session.interactions % 5 === 0) {
           const data = collectDeviceData()
-          data.session.endReason = "timeout"
           sendDataToServer(data)
-
-          // Reiniciar sessão
-          session.id = generateUUID()
-          session.startTime = currentTime
-          session.lastActivity = currentTime
-          session.interactions = 0
-          session.events = []
         }
-      }
-    }, 1000)
-
-    // Rastrear saída da página
-    window.addEventListener("beforeunload", () => {
-      const data = collectDeviceData()
-      data.session.endReason = "navigation"
-      data.session.endTime = new Date().getTime()
-      data.session.duration = data.session.endTime - data.session.startTime
-
-      // Usar sendBeacon para garantir que os dados sejam enviados
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon("/collect", JSON.stringify(data))
-      } else {
-        // Fallback para XMLHttpRequest síncrono
-        const xhr = new XMLHttpRequest()
-        xhr.open("POST", "/collect", false)
-        xhr.setRequestHeader("Content-Type", "application/json")
-        xhr.send(JSON.stringify(data))
-      }
+      }, 150)
     })
   }
 
-  // Coletar e enviar dados quando o documento estiver carregado
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      const data = collectDeviceData()
-      sendDataToServer(data)
+  // Rastrear movimentos do mouse
+  if (config.trackMovement) {
+    document.addEventListener("mousemove", (e) => {
+      const timestamp = new Date().getTime()
+      session.lastActivity = timestamp
+
+      const position = { x: e.clientX, y: e.clientY }
+      session.events.push({
+        type: "mousemove",
+        position: position,
+        timestamp: timestamp,
+      })
     })
-  } else {
+  }
+
+  // Rastrear sessão expirada
+  setInterval(() => {
+    if (new Date().getTime() - session.lastActivity > config.sessionTimeout) {
+      console.log("Sessão expirada")
+      // Enviar dados da sessão expirada para o servidor
+      sendDataToServer(session)
+    }
+  }, 10000)
+
+  // Enviar dados de sessão inicial
+  setTimeout(() => {
     const data = collectDeviceData()
     sendDataToServer(data)
-  }
+  }, 1000)
 
-  // Adicionar um pixel de rastreamento invisível
-  const img = document.createElement("img")
-  img.src = "/pixel?t=" + new Date().getTime()
-  img.style.position = "absolute"
-  img.style.width = "1px"
-  img.style.height = "1px"
-  img.style.opacity = "0"
-  document.body.appendChild(img)
 })()
