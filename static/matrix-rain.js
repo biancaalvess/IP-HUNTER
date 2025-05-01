@@ -1,14 +1,14 @@
 /**
- * Matrix Digital Rain Effect
- * Creates a hacker-style background with falling green characters
- */
+* Efeito Chuva Digital Matrix
+* Cria um fundo estilo hacker com personagens verdes caindo
+*/
 
 (function() {
-    // Create canvas element
+    // Criar elemento canvas
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
-    // Set canvas to be fixed in the background
+    // Define a tela para ser fixada no fundo
     canvas.style.position = 'fixed';
     canvas.style.top = '0';
     canvas.style.left = '0';
@@ -17,74 +17,74 @@
     canvas.style.zIndex = '-1';
     canvas.style.opacity = '0.8';
     
-    // Insert canvas as the first element in the body
+    // Insira a tela como o primeiro elemento no corpo
     document.body.insertBefore(canvas, document.body.firstChild);
     
-    // Set canvas dimensions
+    // Definir dimensões da tela
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
     
-    // Initialize variables
-    let columns; // number of columns for the rain
-    let drops = []; // array of drops - one per column
+    // Inicializar variáveis
+    let columns; // número de colunas para a chuva
+    let drops = []; // conjunto de gotas - uma por coluna
     const fontSize = 14;
     
-    // Characters to be displayed
+    // Caracteres a serem exibidos
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$+-*/=%"\'#&_(),.;:?!\\|{}<>[]^~';
     
-    // Initialize the canvas
+    // Inicializar a tela
     function initCanvas() {
       resizeCanvas();
-      columns = Math.floor(canvas.width / fontSize); // number of columns for the rain
+      columns = Math.floor(canvas.width / fontSize); // número de colunas para a chuva
       
-      // Initialize drops
+      // Inicializar gotas
       drops = [];
       for (let i = 0; i < columns; i++) {
-        // Set initial position randomly for each column
+        // Defina a posição inicial aleatoriamente para cada coluna
         drops[i] = Math.random() * -100;
       }
     }
     
-    // Drawing function
+    // Função de desenho
     function draw() {
-      // Set semi-transparent black background to create trail effect
+      // Defina um fundo preto semitransparente para criar um efeito de trilha
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Set the font and color
+      // Defina a fonte e a cor
       ctx.font = fontSize + 'px monospace';
       
-      // Loop through drops
+      //Loop através de gotas
       for (let i = 0; i < drops.length; i++) {
-        // Choose a random character
+        // Escolha um personagem aleatório
         const text = chars[Math.floor(Math.random() * chars.length)];
         
-        // Calculate brightness based on position (brighter at the head of each column)
+        // Calcular o brilho com base na posição (mais brilhante no topo de cada coluna)
         const headBrightness = Math.min(1, (drops[i] % 20) / 10);
         const brightness = Math.max(0.2, headBrightness);
         
-        // Set color with varying opacity for a more dynamic look
+        //Desenhe o personagem
         ctx.fillStyle = `rgba(0, 255, 70, ${brightness})`;
         
-        // Draw the character
+        //Desenhe o personagem
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
         
-        // Move the drop down
+        // Mova o menu suspenso para baixo
         drops[i]++;
         
-        // Reset drop to top with random delay when it reaches bottom
+        // Redefine a queda para o topo com atraso aleatório quando atinge o fundo
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
       }
     }
     
-    // Handle window resize
+    // Lidar com o redimensionamento da janela
     window.addEventListener('resize', initCanvas);
     
-    // Initialize and start animation
+    // Inicializar e iniciar a animação
     initCanvas();
     setInterval(draw, 33); // ~30 FPS
   })();
